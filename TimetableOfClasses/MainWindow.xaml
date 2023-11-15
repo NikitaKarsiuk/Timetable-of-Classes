@@ -1,0 +1,535 @@
+﻿<Window x:Class="TimetableOfClasses.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:TimetableOfClasses"
+    xmlns:converters="clr-namespace:TimetableOfClasses.Converters"
+    mc:Ignorable="d"
+    Loaded="Window_Loaded"
+    KeyUp="Window_KeyUp"
+    Title="Расписание занятий" Height="520" Width="1100"
+    ResizeMode="NoResize">
+      
+
+  <Window.Resources>
+    <converters:GroupConverter x:Key="GroupConverter" />
+    <converters:DayConverter x:Key="DayConverter" />
+    <converters:LessonNumberConverter x:Key="LessonNumberConverter" />
+    <converters:TeacherConverter x:Key="TeacherConverter" />
+    <converters:ClassNumberConverter x:Key="ClassNumberConverter" />
+    <converters:LessonNameConverter x:Key="LessonNameConverter" />
+    <converters:TeacherViewConverter x:Key="TeacherViewConverter" />
+  </Window.Resources>
+
+  <Grid>
+    <Grid Background="#FF6BD68D">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"></ColumnDefinition>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*"></RowDefinition>
+      </Grid.RowDefinitions>
+      <TabControl Name="TabControl" Style="{StaticResource TabControl}">
+        <TabItem Header="Личный кабинет" Style="{StaticResource SecondaryTabItem}" Margin="0">
+          <Grid Background="#FFC4FFD7">
+            <TabControl x:Name="FirstTabControl" Style="{StaticResource SecondaryTabControl}" Grid.ColumnSpan="2">
+              <TabItem Header=" " Style="{StaticResource SecondaryTabItem}" Visibility="Hidden">
+                <Grid Height="456" Width="988" >
+                  <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                      <Label>Фамилия:</Label>
+                      <TextBox x:Name="SurnameTextBox" Style="{StaticResource TextBox}" Width="246" Margin="5,0,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                      <Label>Имя:</Label>
+                      <TextBox x:Name="NameTextBox" Style="{StaticResource TextBox}" Width="246" Margin="31,0,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                      <Label>Отчество:</Label>
+                      <TextBox x:Name="PatronymicTextBox" Style="{StaticResource TextBox}" Width="247" Margin="4,0,0,0"/>
+                    </StackPanel>
+                    <StackPanel x:Name="GroupStackPanel" Orientation="Horizontal" Margin="0,10,0,0">
+                      <Label>Группа:</Label>
+                      <TextBox x:Name="GroupTextBox" Style="{StaticResource TextBox}" Width="247" Margin="16,0,0,0"/>
+                    </StackPanel>
+                  </StackPanel>
+                </Grid>
+              </TabItem>
+              <TabItem Header="Выход" Style="{StaticResource SecondaryTabItem}" MouseUp="ExitTabItem_MouseUp" Margin="0,389,0,-389">
+              </TabItem>
+            </TabControl>
+
+            <TextBox x:Name="TextBoxUserPersonalAccount" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="Transparent" Background="Transparent" Height="30" Width="100" Margin="974,-30,18,459" />
+          </Grid>
+        </TabItem>
+        <TabItem Header="Расписание занятий" Style="{StaticResource SecondaryTabItem}" Margin="0">
+          <Grid Background="#FFC4FFD7">
+            <TabControl x:Name="SecondaryTabControl" Style="{StaticResource SecondaryTabControl}" Grid.ColumnSpan="2">
+              <TabItem Header=" " Style="{StaticResource SecondaryTabItem}" Visibility="Hidden">
+                <Grid Height="450" Width="950">
+                  <Grid ShowGridLines="False" Name="TimetableGrid">
+                    <Grid.RowDefinitions>
+                      <RowDefinition Height="47*"/>
+                      <RowDefinition Height="47*"/>
+                      <RowDefinition Height="47*"/>
+                      <RowDefinition Height="47*"/>
+                      <RowDefinition Height="47*"/>
+                      <RowDefinition Height="47*"/>
+                      <RowDefinition Height="47*"/>
+                      <RowDefinition Height="47*"/>
+                      <RowDefinition Height="47*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition></ColumnDefinition>
+                      <ColumnDefinition></ColumnDefinition>
+                      <ColumnDefinition></ColumnDefinition>
+                      <ColumnDefinition></ColumnDefinition>
+                      <ColumnDefinition></ColumnDefinition>
+                      <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Margin="0,1,0,0">Поиск:</Label>
+                     <TextBox Grid.Row="0" Grid.Column="0" Name="SearchTextBox" Margin="55,5,-25,25"/>
+                    
+                    <Button Grid.Row="0" Grid.Column="0" Name="SearchButton" Content="Найти" Margin="185,5,-90,25" Click="SearchButton_Click"/>
+
+                    <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Margin="0,25,0,0">Понедельник</Label>
+                    <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Margin="0,25,0,0">Вторник</Label>
+                    <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Margin="0,25,0,0">Среда</Label>
+                    <Label Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" Margin="0,25,0,0">Четверг</Label>
+                    <Label Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" Margin="0,25,0,0">Пятница</Label>
+                    <Label Grid.Row="0" Grid.Column="5" HorizontalAlignment="Center" Margin="0,25,0,0">Суббота</Label>
+
+                    <Label Grid.Row="1" Grid.Column="0" Margin="-5,12,0,0">1</Label>
+                    <TextBox Grid.Row="1" Grid.Column="0" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxMon1" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="1" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxMon1" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="1" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxMon1" Margin="10,27,40,3"/>
+                    <TextBox Grid.Row="1" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxMon1" Margin="116,5,5,20"/>
+                    <TextBox Grid.Row="1" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxMon1" Margin="116,27,5,3"/>
+
+                    <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxTue1" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxTue1" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxTue1" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxTue1" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxTue1" Margin="112,27,5,3"/>
+
+                    <TextBox Grid.Row="1" Grid.Column="2" Visibility="Hidden" IsReadOnly="True" Name="IdTextBoxWed1" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="1" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxWed1" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="1" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxWed1" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="1" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxWed1" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="1" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxWed1" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="1" Grid.Column="3" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxThu1" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="1" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxThu1" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="1" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxThu1" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="1" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxThu1" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="1" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxThu1" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="1" Grid.Column="4" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxFri1" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="1" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxFri1" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="1" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxFri1" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="1" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxFri1" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="1" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxFri1" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="1" Grid.Column="5" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxSat1" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="1" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxSat1" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="1" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxSat1" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="1" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxSat1" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="1" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxSat1" Margin="112,27,5,3"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Margin="-5,12,0,0">2</Label>
+                                        <TextBox Grid.Row="2" Grid.Column="0" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxMon2" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="2" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxMon2" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="2" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxMon2" Margin="10,27,40,3"/>
+                    <TextBox Grid.Row="2" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxMon2" Margin="116,5,5,20"/>
+                    <TextBox Grid.Row="2" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxMon2" Margin="116,27,5,3"/>
+
+                                        <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxTue2" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxTue2" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxTue2" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxTue2" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxTue2" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="2" Grid.Column="2" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxWed2" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="2" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxWed2" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="2" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxWed2" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="2" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxWed2" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="2" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxWed2" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="2" Grid.Column="3" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxThu2" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="2" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxThu2" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="2" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxThu2" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="2" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxThu2" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="2" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxThu2" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="2" Grid.Column="4" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxFri2" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="2" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxFri2" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="2" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxFri2" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="2" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxFri2" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="2" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxFri2" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="2" Grid.Column="5" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxSat2" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="2" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxSat2" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="2" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxSat2" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="2" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxSat2" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="2" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxSat2" Margin="112,27,5,3"/>
+
+                    <Label Grid.Row="3" Grid.Column="0" Margin="-5,12,0,0">3</Label>
+                                        <TextBox Grid.Row="3" Grid.Column="0" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxMon3" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="3" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxMon3" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="3" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxMon3" Margin="10,27,40,3"/>
+                    <TextBox Grid.Row="3" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxMon3" Margin="116,5,5,20"/>
+                    <TextBox Grid.Row="3" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxMon3" Margin="116,27,5,3"/>
+
+                                        <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxTue3" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxTue3" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxTue3" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxTue3" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxTue3" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="3" Grid.Column="2" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxWed3" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="3" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxWed3" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="3" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxWed3" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="3" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxWed3" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="3" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxWed3" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="3" Grid.Column="3" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxThu3" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="3" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxThu3" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="3" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxThu3" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="3" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxThu3" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="3" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxThu3" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="3" Grid.Column="4" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxFri3" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="3" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxFri3" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="3" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxFri3" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="3" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxFri3" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="3" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxFri3" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="3" Grid.Column="5" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxSat3" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="3" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxSat3" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="3" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxSat3" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="3" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxSat3" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="3" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxSat3" Margin="112,27,5,3"/>
+
+                    <Label Grid.Row="4" Grid.Column="0" Margin="-5,12,0,0">4</Label>
+                                        <TextBox Grid.Row="4" Grid.Column="0" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxMon4" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="4" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxMon4" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="4" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxMon4" Margin="10,27,40,3"/>
+                    <TextBox Grid.Row="4" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxMon4" Margin="116,5,5,20"/>
+                    <TextBox Grid.Row="4" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxMon4" Margin="116,27,5,3"/>
+
+                                        <TextBox Grid.Row="4" Grid.Column="1" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxTue4" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxTue4" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxTue4" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxTue4" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxTue4" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="4" Grid.Column="2" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxWed4" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="4" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxWed4" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="4" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxWed4" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="4" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxWed4" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="4" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxWed4" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="4" Grid.Column="3" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxThu4" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="4" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxThu4" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="4" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxThu4" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="4" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxThu4" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="4" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxThu4" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="4" Grid.Column="4" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxFri4" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="4" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxFri4" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="4" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxFri4" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="4" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxFri4" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="4" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxFri4" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="4" Grid.Column="5" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxSat4" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="4" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxSat4" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="4" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxSat4" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="4" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxSat4" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="4" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxSat4" Margin="112,27,5,3"/>
+
+                    <Label Grid.Row="5" Grid.Column="0" Margin="-5,12,0,0">5</Label>
+                                        <TextBox Grid.Row="5" Grid.Column="0" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxMon5" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="5" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxMon5" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="5" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxMon5" Margin="10,27,40,3"/>
+                    <TextBox Grid.Row="5" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxMon5" Margin="116,5,5,20"/>
+                    <TextBox Grid.Row="5" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxMon5" Margin="116,27,5,3"/>
+
+                                        <TextBox Grid.Row="5" Grid.Column="1" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxTue5" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="5" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxTue5" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="5" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxTue5" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="5" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxTue5" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="5" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxTue5" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="5" Grid.Column="2" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxWed5" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="5" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxWed5" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="5" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxWed5" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="5" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxWed5" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="5" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxWed5" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="5" Grid.Column="3" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxThu5" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="5" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxThu5" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="5" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxThu5" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="5" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxThu5" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="5" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxThu5" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="5" Grid.Column="4" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxFri5" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="5" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxFri5" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="5" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxFri5" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="5" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxFri5" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="5" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxFri5" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="5" Grid.Column="5" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxSat5" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="5" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxSat5" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="5" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxSat5" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="5" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxSat5" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="5" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxSat5" Margin="112,27,5,3"/>
+
+                    <Label Grid.Row="6" Grid.Column="0" Margin="-5,12,0,0">6</Label>
+                                        <TextBox Grid.Row="6" Grid.Column="0" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxMon6" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="6" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxMon6" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="6" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxMon6" Margin="10,27,40,3"/>
+                    <TextBox Grid.Row="6" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxMon6" Margin="116,5,5,20"/>
+                    <TextBox Grid.Row="6" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxMon6" Margin="116,27,5,3"/>
+
+                                        <TextBox Grid.Row="6" Grid.Column="1" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxTue6" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="6" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxTue6" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="6" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxTue6" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="6" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxTue6" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="6" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxTue6" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="6" Grid.Column="2" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxWed6" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="6" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxWed6" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="6" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxWed6" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="6" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxWed6" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="6" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxWed6" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="6" Grid.Column="3" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxThu6" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="6" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxThu6" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="6" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxThu6" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="6" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxThu6" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="6" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxThu6" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="6" Grid.Column="4" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxFri6" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="6" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxFri6" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="6" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxFri6" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="6" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxFri6" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="6" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxFri6" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="6" Grid.Column="5" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxSat6" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="6" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxSat6" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="6" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxSat6" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="6" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxSat6" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="6" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxSat6" Margin="112,27,5,3"/>
+
+                    <Label Grid.Row="7" Grid.Column="0" Margin="-5,12,0,0">7</Label>
+                                        <TextBox Grid.Row="7" Grid.Column="0" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxMon7" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="7" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxMon7" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="7" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxMon7" Margin="10,27,40,3"/>
+                    <TextBox Grid.Row="7" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxMon7" Margin="116,5,5,20"/>
+                    <TextBox Grid.Row="7" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxMon7" Margin="116,27,5,3"/>
+
+                                        <TextBox Grid.Row="7" Grid.Column="1" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxTue7" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="7" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxTue7" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="7" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxTue7" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="7" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxTue7" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="7" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxTue7" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="7" Grid.Column="2" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxWed7" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="7" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxWed7" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="7" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxWed7" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="7" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxWed7" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="7" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxWed7" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="7" Grid.Column="3" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxThu7" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="7" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxThu7" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="7" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxThu7" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="7" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxThu7" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="7" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxThu7" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="7" Grid.Column="4" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxFri7" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="7" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxFri7" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="7" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxFri7" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="7" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxFri7" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="7" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxFri7" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="7" Grid.Column="5" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxSat7" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="7" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxSat7" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="7" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxSat7" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="7" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxSat7" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="7" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxSat7" Margin="112,27,5,3"/>
+
+                    <Label Grid.Row="8" Grid.Column="0" Margin="-5,12,0,0">8</Label>
+                                        <TextBox Grid.Row="8" Grid.Column="0" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxMon8" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="8" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxMon8" Margin="10,5,41,22"/>
+                    <TextBox Grid.Row="8" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxMon8" Margin="10,27,40,3"/>
+                    <TextBox Grid.Row="8" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxMon8" Margin="116,5,5,20"/>
+                    <TextBox Grid.Row="8" Grid.Column="0" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxMon8" Margin="116,27,5,3"/>
+
+                                        <TextBox Grid.Row="8" Grid.Column="1" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxTue8" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="8" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxTue8" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="8" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxTue8" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="8" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxTue8" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="8" Grid.Column="1" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxTue8" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="8" Grid.Column="2" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxWed8" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="8" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxWed8" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="8" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxWed8" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="8" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxWed8" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="8" Grid.Column="2" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxWed8" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="8" Grid.Column="3" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxThu8" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="8" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxThu8" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="8" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxThu8" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="8" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxThu8" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="8" Grid.Column="3" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxThu8" Margin="112,27,5,3"/>
+
+                                        <TextBox Grid.Row="8" Grid.Column="4" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxFri8" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="8" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxFri8" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="8" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxFri8" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="8" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxFri8" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="8" Grid.Column="4" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxFri8" Margin="112,27,5,3"/>
+
+                    <TextBox Grid.Row="8" Grid.Column="5" IsReadOnly="True" Visibility="Hidden" PreviewMouseDown="SearchTimetable_Click" Name="IdTextBoxSat8" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="8" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="LessonNameTextBoxSat8" Margin="5,5,42,22"/>
+                    <TextBox Grid.Row="8" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="TeacherNameTextBoxSat8" Margin="5,27,40,3"/>
+                    <TextBox Grid.Row="8" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="GroupTextBoxSat8" Margin="112,5,5,20"/>
+                    <TextBox Grid.Row="8" Grid.Column="5" IsReadOnly="True" PreviewMouseDown="SearchTimetable_Click" Name="ClassNumberTextBoxSat8" Margin="112,27,5,3"/>
+                  </Grid>
+                </Grid>
+              </TabItem>
+              <TabItem Header="Выход" Style="{StaticResource SecondaryTabItem}" MouseUp="ExitTabItem_MouseUp" Margin="0,389,0,-389">
+              </TabItem>
+            </TabControl>
+
+            <TextBox x:Name="TextBoxUserTimetable" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="Transparent" Background="Transparent" Height="30" Width="100" Margin="974,-30,18,459" />
+          </Grid>
+        </TabItem>
+
+        <TabItem Header="Админ панель" Style="{StaticResource SecondaryTabItem}" MouseUp="TimetableTabItem_MouseUp" Margin="0">
+          <Grid Background="#FFC4FFD7">
+            <TabControl Name="ThirdTabControl" Style="{StaticResource SecondaryTabControl}" Grid.ColumnSpan="2" >
+              <TabItem Header="Занятия" Style="{StaticResource SecondaryTabItem}" MouseUp="TimetableTabItem_MouseUp">
+                <Grid Height="456" Width="988">
+                  <DataGrid VirtualizingStackPanel.IsVirtualizing="False" Name="lessonDataGrid" Margin="10,10,48,55" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                    <DataGrid.Columns>
+                      <DataGridTextColumn Header="Id" Binding="{Binding Id}" Visibility="Hidden" />
+                      <DataGridTextColumn Header="День" Binding="{Binding DayId, Converter={StaticResource DayConverter}, Mode=TwoWay}" />
+                      <DataGridTextColumn Header="Номер урока" Binding="{Binding LessonNumberId, Converter={StaticResource LessonNumberConverter}, Mode=TwoWay}" />
+                      <DataGridTextColumn Header="Кабинет" Binding="{Binding ClassNumberId, Converter={StaticResource ClassNumberConverter}, Mode=TwoWay}" />
+                      <DataGridTextColumn Header="Группа" Binding="{Binding GroupId, Converter={StaticResource GroupConverter}, Mode=TwoWay}" />
+                      <DataGridTextColumn Header="Предмет" Binding="{Binding LessonNameId, Converter={StaticResource LessonNameConverter}, Mode=TwoWay}" />
+                      <DataGridTextColumn Header="Преподаватель" Binding="{Binding LessonNameId, Converter={StaticResource TeacherViewConverter}, Mode=TwoWay}" />
+                      <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                          <DataTemplate>
+                            <Button Click="OpenLessonReplaceWindow_Click">Замена урока</Button>
+                          </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                      </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                  </DataGrid>
+                  <Button x:Name="LessonAddButton" Content="Добавить" Style="{StaticResource Button}" Margin="10,411,878,15" Click="LessonAddButton_Click" />
+                  <Button x:Name="LessonDeleteButton" Content="Удалить" Style="{StaticResource Button}" Margin="115,411,773,15" Click="LessonDeleteButton_Click" />
+                  <Button x:Name="LessonChangeButton" Content="Изменить" Style="{StaticResource Button}" Margin="220,411,668,0" Click="LessonChangeButton_Click" VerticalAlignment="Top" />
+                </Grid>
+              </TabItem>
+              <TabItem Header="Ученик" Style="{StaticResource SecondaryTabItem}" MouseUp="TimetableTabItem_MouseUp">
+                <Grid Height="456" Width="988">
+                  <DataGrid Name="studentDataGrid" Margin="10,10,54,55" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                    <DataGrid.Columns>
+                      <DataGridTextColumn Header="Id" Binding="{Binding Id}" Visibility="Hidden" />
+                      <DataGridTextColumn Header="Фамилия" Binding="{Binding Surname}" />
+                      <DataGridTextColumn Header="Имя" Binding="{Binding Name}" />
+                      <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic}" />
+                      <DataGridTextColumn Header="Группа" Binding="{Binding GroupId, Converter={StaticResource GroupConverter}, Mode=TwoWay}" />
+                      <DataGridTextColumn Header="Логин" Binding="{Binding Login}" />
+                      <DataGridTextColumn Header="Пароль" Binding="{Binding Password}" />
+                    </DataGrid.Columns>
+                  </DataGrid>
+                  <Button x:Name="StudentAddButton" Content="Добавить" Style="{StaticResource Button}" Margin="10,411,878,15" Click="StudentAddButton_Click" />
+                  <Button x:Name="StudentDeleteButton" Content="Удалить" Style="{StaticResource Button}" Margin="115,411,773,15" Click="StudentDeleteButton_Click" />
+                  <Button x:Name="StudentChangeButton" Content="Изменить" Style="{StaticResource Button}" Margin="220,411,668,0" Click="StudentChangeButton_Click" VerticalAlignment="Top" />
+                </Grid>
+              </TabItem>
+              <TabItem Header="Преподаватель" Style="{StaticResource SecondaryTabItem}" MouseUp="TimetableTabItem_MouseUp">
+                <Grid Height="456" Width="988">
+                  <DataGrid Name="teacherDataGrid" Margin="10,10,54,55" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                    <DataGrid.Columns>
+                      <DataGridTextColumn Header="Id" Binding="{Binding Id}" Visibility="Hidden" />
+                      <DataGridTextColumn Header="Фамилия" Binding="{Binding Surname}" />
+                      <DataGridTextColumn Header="Имя" Binding="{Binding Name}" />
+                      <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic}" />
+                      <DataGridTextColumn Header="Логин" Binding="{Binding Login}" />
+                      <DataGridTextColumn Header="Пароль" Binding="{Binding Password}" />
+                      <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                          <DataTemplate>
+                            <Button Click="OpenLessonWindow_Click">Предметы</Button>
+                          </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                      </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                  </DataGrid>
+                  <Button x:Name="TeacherAddButton" Content="Добавить" Style="{StaticResource Button}" Margin="10,411,878,15" Click="TeacherAddButton_Click" />
+                  <Button x:Name="TeacherDeleteButton" Content="Удалить" Style="{StaticResource Button}" Margin="115,411,773,15" Click="TeacherDeleteButton_Click" />
+                  <Button x:Name="TeacherChangeButton" Content="Изменить" Style="{StaticResource Button}" Margin="220,411,668,0" Click="TeacherChangeButton_Click" VerticalAlignment="Top" />
+                </Grid>
+              </TabItem>
+              <TabItem Header="Администратор" Style="{StaticResource SecondaryTabItem}" MouseUp="TimetableTabItem_MouseUp">
+                <Grid Height="456" Width="988">
+                  <DataGrid Name="adminDataGrid" Margin="10,10,54,55" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                    <DataGrid.Columns>
+                      <DataGridTextColumn Header="Id" Binding="{Binding Id}" Visibility="Hidden" />
+                      <DataGridTextColumn Header="Фамилия" Binding="{Binding Surname}" />
+                      <DataGridTextColumn Header="Имя" Binding="{Binding Name}" />
+                      <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic}" />
+                      <DataGridTextColumn Header="Логин" Binding="{Binding Login}" />
+                      <DataGridTextColumn Header="Пароль" Binding="{Binding Password}" />
+                    </DataGrid.Columns>
+                  </DataGrid>
+                  <Button x:Name="AdminAddButton" Content="Добавить" Style="{StaticResource Button}" Margin="10,411,878,15" Click="AdminAddButton_Click" />
+                  <Button x:Name="AdminDeleteButton" Content="Удалить" Style="{StaticResource Button}" Margin="115,411,773,15" Click="AdminDeleteButton_Click" />
+                  <Button x:Name="AdminChangeButton" Content="Изменить" Style="{StaticResource Button}" Margin="220,411,668,0" Click="AdminChangeButton_Click" VerticalAlignment="Top" />
+                </Grid>
+              </TabItem>
+              <TabItem Header="Кабинет" Style="{StaticResource SecondaryTabItem}" MouseUp="TimetableTabItem_MouseUp">
+                <Grid Height="456" Width="988">
+                  <DataGrid Name="classNumberDataGrid" Margin="10,10,54,55" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                    <DataGrid.Columns>
+                      <DataGridTextColumn Header="ID" Binding="{Binding Id}" Visibility="Hidden" />
+                      <DataGridTextColumn Header="Номер кабинета" Binding="{Binding Number}" />
+                    </DataGrid.Columns>
+                  </DataGrid>
+                  <Button x:Name="ClassNumberAddButton" Content="Добавить" Style="{StaticResource Button}" Margin="10,411,878,15" Click="ClassNumberAddButton_Click" />
+                  <Button x:Name="ClassNumberDeleteButton" Content="Удалить" Style="{StaticResource Button}" Margin="115,411,773,15" Click="ClassNumberDeleteButton_Click" />
+                  <Button x:Name="ClassNumberChangeButton" Content="Изменить" Style="{StaticResource Button}" Margin="220,411,668,0" Click="ClassNumberChangeButton_Click" VerticalAlignment="Top" />
+                </Grid>
+              </TabItem>
+              <TabItem Header="Группа" Style="{StaticResource SecondaryTabItem}" MouseUp="TimetableTabItem_MouseUp">
+                <Grid Height="456" Width="988">
+                  <DataGrid Name="groupDataGrid" Margin="10,10,54,55" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                    <DataGrid.Columns>
+                      <DataGridTextColumn Header="Id" Binding="{Binding Id}" Visibility="Hidden"/>
+                      <DataGridTextColumn Header="Группа" Binding="{Binding Name}" />
+                      <DataGridTextColumn Header="Количество часов" Binding="{Binding Count}"/>
+                    </DataGrid.Columns>
+                  </DataGrid>
+                  <Button x:Name="GroupAddButton" Content="Добавить" Style="{StaticResource Button}" Margin="10,411,878,15" Click="GroupAddButton_Click" />
+                  <Button x:Name="GroupDeleteButton" Content="Удалить" Style="{StaticResource Button}" Margin="115,411,773,15" Click="GroupDeleteButton_Click" />
+                  <Button x:Name="GroupChangeButton" Content="Изменить" Style="{StaticResource Button}" Margin="220,411,668,0" Click="GroupChangeButton_Click" VerticalAlignment="Top" />
+                  <Button x:Name="AmoutOfHourseButton" Content="Кол-во часов" Style="{StaticResource Button}" Margin="325,411,563,0" Click="AmoutOfHourseButton_Click" VerticalAlignment="Top" />
+               </Grid>
+              </TabItem>
+              <TabItem Header="Выход" Style="{StaticResource SecondaryTabItem}" MouseUp="ExitTabItem_MouseUp" Margin="0,240,0,-240">
+                <Grid Height="456" Width="988"/>
+              </TabItem>
+            </TabControl>
+            <TextBox Name="TextBoxUserAdmin" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="Transparent" Background="Transparent" Height="30" Width="100" Margin="974,-30,18,459" />
+          </Grid>
+        </TabItem>
+      </TabControl>
+    </Grid>
+  </Grid>
+</Window>

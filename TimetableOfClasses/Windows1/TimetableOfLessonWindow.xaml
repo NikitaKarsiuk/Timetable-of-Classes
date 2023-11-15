@@ -1,0 +1,29 @@
+﻿<Window x:Class="TimetableOfClasses.Windows1.TimetableOfLessonWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TimetableOfClasses.Windows1"
+        xmlns:converters="clr-namespace:TimetableOfClasses.Converters"
+        mc:Ignorable="d"
+        Height="206" Width="365"
+        KeyUp="Window_KeyUp"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <converters:TeacherConverter x:Key="TeacherConverter" />
+    </Window.Resources>
+    <Grid Margin="0,0,0,0">
+        <Grid Margin="0,0,-1,0" Height="177" VerticalAlignment="Top">
+            <DataGrid Name="lessonDataGrid" Margin="10,10,30,64" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" Visibility="Hidden" />
+                    <DataGridTextColumn Header="Название урока" Width="301" Binding="{Binding Name}" />
+
+                </DataGrid.Columns>
+            </DataGrid>
+            <Button x:Name="LessonAddButton" Content="Добавить"  Style="{StaticResource Button}" Margin="8,122,254,25" Click="LessonAddButton_Click" Width="Auto"  />
+            <Button x:Name="LessonDeleteButton" Content="Удалить"  Style="{StaticResource Button}" Margin="120,122,142,25" Click="LessonDeleteButton_Click" Width="Auto"  />
+            <Button x:Name="LessonChangeButton" Content="Изменить"  Style="{StaticResource Button}" Margin="232,122,30,0" Click="LessonChangeButton_Click" VerticalAlignment="Top" Width="Auto"  />
+        </Grid>
+    </Grid>
+</Window>
